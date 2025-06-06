@@ -16,37 +16,19 @@
       width: 100%; height: 100%;
       position: fixed; top: 0; left: 0;
     }
-    #info-box {
-      position: absolute;
-      bottom: 10px;
-      width: 100%;
-      text-align: center;
-      font-size: 18px;
-      color: white;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 10px;
-      display: none;
-      font-family: sans-serif;
-    }
     .mindar-ui-loading, .mindar-ui-error, .mindar-ui-scanning {
       display: none;
     }
   </style>
 </head>
 <body>
+  <a-scene mindar-image="imageTargetSrc: targets.mind; autoStart: true; filterMinCF:0.0001; filterBeta: 0.01"
+           color-space="sRGB"
+           renderer="alpha: true, colorManagement: true, physicallyCorrectLights"
+           vr-mode-ui="enabled: false"
+           device-orientation-permission-ui="enabled: false">
 
-  <!-- 說明文字顯示區塊 -->
-  <div id="info-box"></div>
-
- <a-scene
-  mindar-image="imageTargetSrc: targets.mind; autoStart: true"
-  embedded
-  loading-screen="enabled: false"
-  vr-mode-ui="enabled: false"
-  device-orientation-permission-ui="enabled: true"
-  renderer="colorManagement: true, physicallyCorrectLights"
->
-
+    <!-- 加入音樂資源 -->
     <a-assets>
       <audio id="bgm" src="SUNMIX.mp3" preload="auto"></audio>
     </a-assets>
@@ -61,7 +43,7 @@
       <!-- 太陽系容器 -->
       <a-entity id="solar-system"></a-entity>
 
-      <!-- 背景音樂 -->
+      <!-- 播放背景音樂 -->
       <a-entity sound="src: #bgm; autoplay: true; loop: true; volume: 0.5"></a-entity>
     </a-entity>
 
@@ -69,23 +51,20 @@
 
   <script>
     const planets = [
-      { name: "水星 Mercury", color: "#9E9E9E", radius: 0.08, distance: 0.8, orbitSpeed: 10, spinSpeed: 3000, description: "離太陽最近的行星，表面有許多隕石坑。" },
-      { name: "金星 Venus", color: "#FFCC80", radius: 0.1, distance: 1.1, orbitSpeed: 15, spinSpeed: 4000, description: "最熱的行星，被厚厚的雲層覆蓋。" },
-      { name: "地球 Earth", color: "#2196F3", radius: 0.11, distance: 1.4, orbitSpeed: 20, spinSpeed: 3000, description: "我們居住的行星，有豐富的生命和水。" },
-      { name: "火星 Mars", color: "#F44336", radius: 0.09, distance: 1.7, orbitSpeed: 25, spinSpeed: 3500, description: "紅色的行星，表面有山脈和峽谷。" },
-      { name: "木星 Jupiter", color: "#FFA726", radius: 0.22, distance: 2.2, orbitSpeed: 30, spinSpeed: 2500, description: "最大的行星，有巨大的紅色風暴。" },
-      { name: "土星 Saturn", color: "#FFEB3B", radius: 0.2, distance: 2.7, orbitSpeed: 35, spinSpeed: 2700, description: "有美麗的光環，由冰和岩石組成。" },
-      { name: "天王星 Uranus", color: "#80DEEA", radius: 0.18, distance: 3.1, orbitSpeed: 40, spinSpeed: 3300, description: "傾斜的行星，顏色呈藍綠色。" },
-      { name: "海王星 Neptune", color: "#3F51B5", radius: 0.17, distance: 3.5, orbitSpeed: 45, spinSpeed: 3100, description: "最遠的行星，有強烈的風暴。" }
+      { name: "水星 Mercury", color: "#9E9E9E", radius: 0.08, distance: 0.8, orbitSpeed: 10, spinSpeed: 3000 },
+      { name: "金星 Venus", color: "#FFCC80", radius: 0.1, distance: 1.1, orbitSpeed: 15, spinSpeed: 4000 },
+      { name: "地球 Earth", color: "#2196F3", radius: 0.11, distance: 1.4, orbitSpeed: 20, spinSpeed: 3000 },
+      { name: "火星 Mars", color: "#F44336", radius: 0.09, distance: 1.7, orbitSpeed: 25, spinSpeed: 3500 },
+      { name: "木星 Jupiter", color: "#FFA726", radius: 0.22, distance: 2.2, orbitSpeed: 30, spinSpeed: 2500 },
+      { name: "土星 Saturn", color: "#FFEB3B", radius: 0.2, distance: 2.7, orbitSpeed: 35, spinSpeed: 2700 },
+      { name: "天王星 Uranus", color: "#80DEEA", radius: 0.18, distance: 3.1, orbitSpeed: 40, spinSpeed: 3300 },
+      { name: "海王星 Neptune", color: "#3F51B5", radius: 0.17, distance: 3.5, orbitSpeed: 45, spinSpeed: 3100 }
     ];
 
     window.addEventListener("load", () => {
       const solarSystem = document.getElementById("solar-system");
-      const infoBox = document.getElementById("info-box");
 
-      let currentPlanet = null; // 記錄目前顯示文字的星球
-
-      planets.forEach((planet, index) => {
+      planets.forEach((planet) => {
         const orbit = document.createElement("a-entity");
         orbit.setAttribute("rotation", "0 0 0");
 
@@ -93,23 +72,8 @@
         sphere.setAttribute("position", `${planet.distance} 0 0`);
         sphere.setAttribute("radius", planet.radius);
         sphere.setAttribute("color", planet.color);
-        sphere.setAttribute("class", "planet");
 
-        const sphereId = `planet-${index}`;
-        sphere.setAttribute("id", sphereId);
-
-        // 點擊切換文字顯示或隱藏
-        sphere.addEventListener("click", () => {
-          if (currentPlanet === sphereId) {
-            infoBox.style.display = "none";
-            currentPlanet = null;
-          } else {
-            infoBox.innerText = `${planet.name}：${planet.description}`;
-            infoBox.style.display = "block";
-            currentPlanet = sphereId;
-          }
-        });
-
+        // 自轉動畫
         sphere.setAttribute("animation__spin", {
           property: "rotation",
           to: "0 360 0",
@@ -118,6 +82,7 @@
           loop: true
         });
 
+        // 名稱文字
         const label = document.createElement("a-text");
         label.setAttribute("value", planet.name);
         label.setAttribute("color", "white");
@@ -125,9 +90,11 @@
         label.setAttribute("position", `${planet.distance} -0.3 0`);
         label.setAttribute("side", "double");
 
+        // 加入 orbit
         orbit.appendChild(sphere);
         orbit.appendChild(label);
 
+        // 公轉動畫
         orbit.setAttribute("animation__orbit", {
           property: "rotation",
           to: `0 360 0`,
@@ -142,4 +109,3 @@
   </script>
 </body>
 </html>
-
