@@ -5,6 +5,7 @@
   <title>MindAR 太陽系 VR</title>
   <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <script src="https://unpkg.com/aframe-troika-text/dist/aframe-troika-text.min.js"></script> <!-- ✅ 新增：支援中文字 -->
   <style>
     html, body {
       margin: 0; padding: 0;
@@ -27,24 +28,18 @@
            renderer="alpha: true, colorManagement: true, physicallyCorrectLights"
            vr-mode-ui="enabled: false"
            device-orientation-permission-ui="enabled: false">
-
-    <!-- 加入音樂資源 -->
-    <a-assets>
-      <audio id="bgm" src="SUNMIX.mp3" preload="auto"></audio>
-    </a-assets>
-
+           
+    <a-assets></a-assets>
+    
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity mindar-image-target="targetIndex: 0" id="target">
       <!-- 太陽 -->
       <a-sphere position="0 0 0" radius="0.5" color="#FDB813"></a-sphere>
-      <a-text value="太陽 Sun" color="white" position="0 -0.7 0" align="center"></a-text>
+      <a-troika-text value="太陽 Sun" color="white" position="0 -0.7 0" fontSize="0.2" align="center"></a-troika-text> <!-- ✅ 修改：支援中文字 -->
 
       <!-- 太陽系容器 -->
       <a-entity id="solar-system"></a-entity>
-
-      <!-- 播放背景音樂 -->
-      <a-entity sound="src: #bgm; autoplay: true; loop: true; volume: 0.5"></a-entity>
     </a-entity>
 
   </a-scene>
@@ -82,15 +77,15 @@
           loop: true
         });
 
-        // 名稱文字
-        const label = document.createElement("a-text");
+        // 名稱文字（✅ 修改為 a-troika-text 並加入 fontSize）
+        const label = document.createElement("a-troika-text");
         label.setAttribute("value", planet.name);
         label.setAttribute("color", "white");
         label.setAttribute("align", "center");
+        label.setAttribute("fontSize", "0.15");
         label.setAttribute("position", `${planet.distance} -0.3 0`);
         label.setAttribute("side", "double");
 
-        // 加入 orbit
         orbit.appendChild(sphere);
         orbit.appendChild(label);
 
