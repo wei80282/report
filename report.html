@@ -38,11 +38,14 @@
   <!-- 說明文字顯示區塊 -->
   <div id="info-box"></div>
 
-  <a-scene mindar-image="imageTargetSrc: targets.mind; autoStart: true; filterMinCF:0.0001; filterBeta: 0.01"
-           color-space="sRGB"
-           renderer="alpha: true, colorManagement: true, physicallyCorrectLights"
-           vr-mode-ui="enabled: false"
-           device-orientation-permission-ui="enabled: false">
+ <a-scene
+  mindar-image="imageTargetSrc: targets.mind; autoStart: true"
+  embedded
+  loading-screen="enabled: false"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: true"
+  renderer="colorManagement: true, physicallyCorrectLights"
+>
 
     <a-assets>
       <audio id="bgm" src="SUNMIX.mp3" preload="auto"></audio>
